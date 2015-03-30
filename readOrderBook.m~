@@ -1,5 +1,0 @@
-filename = 'orderbook320.csv';
-M = csvread(filename);
-bids =
-
-disp(M)
