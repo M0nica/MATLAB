@@ -1,3 +1,5 @@
+clear 
+
 filename = 'orderbook320.csv';
 
 %--M stores the order book--%
@@ -12,21 +14,9 @@ asks = orderbook(:,3:4)
 %--will display in a better easier to read view--%
 format shortg
 
-% disp('bids')
-% disp(bids)
-% 
-% 
-% disp('asks')
-% disp(asks)
-
-%--newOrderPrice;
-%--newQuantity;
-%--newType;
-
 %--define trades ,a matrix with 2 columns and 0 rows --%
 %--one for price and one for quantity--%
 %--filled with zeroes for every entry--%
-%--spell zereos without an e--%
 trades = zeros(0,2);
 
 %--info for a new order--%
@@ -34,7 +24,7 @@ trades = zeros(0,2);
 newOrderPrice = 33.54
 newQuantity = 3600
 %--new type can equal ask--%
-newType = 'bid'
+newType = 'ask'
 
 %--intial value of unmet shares--&
 unmet = newQuantity
@@ -45,18 +35,6 @@ compatibleAsks = find(asks(:, 1) <= newOrderPrice);
 
 %--look at the first column of bids, to find all compatible orders --%
 compatibleBids = find(bids(:, 1) >= newOrderPrice);
-
-
-% --sum of shares in compatible asks--%
-% availableAsks = sum(asks(compatible,2))
-%
-% --tradeQ  = minimum of demand--%
-% tradeQuantity = min (newQuantity, availableAsks)
-% --tradeP is the price at which trade will occur--%
-% tradePrice = asks(1,1);
-%
-% -- trade matrix is initialized--%
-% trades = [trades; [tradePrice tradeQuantity]]
 
 if newType == 'bid'
     if compatibleAsks > 0
@@ -73,7 +51,6 @@ if newType == 'bid'
                 
                 %--updates the 2nd column (quantity) of compatible asks to,
                 %-- removes the amount that has been fulfilled--%
-                
                 
                 asks(i,2) = asks (i,2) - volume
             end
@@ -111,18 +88,14 @@ if newType == 'bid'
             end
         end
         
-        %-- asks = orderbook(:,3:4);
-        disp(asks)
-        disp(bids)
+       
+       %-- disp(asks)--%
+       %-- disp(bids)--%
         
-        %--  bids = orderbook(:,1:2);
-        
-        
-        
+       
     end
     
-    if unmet == 0
-    end
+    
     
     
     
@@ -152,24 +125,26 @@ else
                 bids(i,2) = bids (i,2) - volume
             end
         end
+    end
         
         %--if a asks order is not completly filled--%
         %--asks side needs to be updated--%
         if unmet > 0
             
             %--adding to asks the unmet quantity--%
-            asks = [asks; [newOrderPrice unmet]]
+            asks = [asks; [newOrderPrice unmet]];
             
             %--sorted asks in decreasing order--%
             
-            asks = sortrows(asks, -1)
+            asks = sortrows(asks, 1);
           
             
             %             Now after your order has executed, you may end up with some 
 % rows in bids with zero quantity. How do you get rid of these? 
 % You can use the following command:
 
-          bids = bids(bids(:,2) > 0,:)
+         bids = bids(bids(:,2) > 0,:);
+         asks = asks(asks(:,2) > 0,:);
      
         end
         
@@ -183,22 +158,29 @@ else
             end
         end
         
+        
+        %--  bids = orderbook(:,1:2);
+        
+        
+        
+end
+    
+   
+    %--this removes any rows with zeros--%
+          bids = bids(bids(:,2) > 0,:);
+         asks = asks(asks(:,2) > 0,:);
         %-- asks = orderbook(:,3:4);
         disp('updated asks:')
         disp(asks)
         
         disp('updated bids:')
         disp(bids)
-        
-        %--  bids = orderbook(:,1:2);
-        
-        
-        
-    end
     
-   
+        
+        newOrderbook(:,1:2) = bids;
+        newOrderbook(:,3:4) = asks;
+
     
-    
-end
+
 
 
