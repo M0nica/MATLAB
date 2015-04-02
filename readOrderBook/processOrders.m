@@ -2,6 +2,7 @@ clear
 
 filename = 'orderbook320.csv';
 
+
 %--M stores the order book--%
 orderbook = csvread(filename);
 
@@ -9,6 +10,10 @@ orderbook = csvread(filename);
 %but only the first two columns--%
 bids = orderbook(:,1:2)
 asks = orderbook(:,3:4)
+
+printBook(bids,asks)
+pause(3)
+
 
 %--changes the format show that exponents are not shown--%
 %--will display in a better easier to read view--%
@@ -164,8 +169,7 @@ else
         
         
 end
-    
-   
+
     %--this removes any rows with zeros--%
           bids = bids(bids(:,2) > 0,:);
          asks = asks(asks(:,2) > 0,:);
@@ -180,7 +184,9 @@ end
         newOrderbook(:,1:2) = bids;
         newOrderbook(:,3:4) = asks;
 
-    
+%--clf %--in order have a clean slate for new order book, clears current figure window
+printBook(bids, asks)
+   
 
 
 
