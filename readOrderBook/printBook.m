@@ -8,7 +8,7 @@ function [ output_args ] = printBook( bids, asks )
 
 %--depth of order book = 12 --%
 if length(bids) < 12 
-depth = length(bids)-1;
+depth = length(bids);
 
 else
 depth = 12;
@@ -28,6 +28,9 @@ text(.5,.95,'Price')
 text(.6,.95,'Quantity') 
 
 
+
+%--bids--%
+
  for i = 1:max(depth)
      %--quantity to integer--%
     quantity = sprintf('%d', round(bids(i,2)))
@@ -43,7 +46,7 @@ text(.2,(.9 - i/10), quantity)
  
   
 
-
+%--asks--%
  for i = 1:max(depth)
      %--quantity to integer--%
     quantity = sprintf('%d', round(asks(i,2)))
