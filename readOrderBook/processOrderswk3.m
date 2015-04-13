@@ -42,6 +42,46 @@ clf %--in order have a clean slate for new order book, clears current figure win
 printBook(nBids, nAsks);
    
 
+
+format bank;
+rng('default')
+totalOrders = 5;
+newOrderPrice = round(33+rand*20,2)
+newQuantity = round(3000+rand*10)
+typeGenerator =rand
+%--bids=zeros(0,2);
+%--asks=zeros(0,2):
+writerObj = VideoWriter('orderbook');
+writerObj.FrameRate = 2;
+open(writerObj);
+
+for i=1:totalOrders
+    if typeGenerator >=.5
+        newType = 'ask'
+    end
+
+    if typeGenerator <.5
+        newType = 'bid'
+    end
+    
+    [ trades, nBids, nAsks ] = execute (bids, asks, newOrderPrice, newQuantity, newType);
+
+   
+   %-- trades = [trades; newTrades]
+   trades = [trades; trades]
+    printBook(bids, asks)
+    pause(.01);
+    F = getframe;
+    writeVideo(writerObj, F);
+
+end
+
+
+
+prices= zeros(0,1);
+for i=1:size(trades,1)
+    prices=[prices; repmat(trades(i,1), trades(i,2),1)];
+end
 % %--intial value of unmet shares--&
 % unmet = newQuantity
 % 

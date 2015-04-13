@@ -7,12 +7,35 @@ function [ output_args ] = printBook( bids, asks )
 %--this function will be called in the original file
 
 %--depth of order book = 12 --%
-if length(bids) < 12 
-depth = length(bids);
 
-else
 depth = 12;
-end
+
+% if length(bids) == 0
+%     depthB = 12;
+% 
+%    
+% elseif length(bids) < 12 && length(bids) > 0
+% depthB = length(bids);
+% 
+% else
+% depthB = 12;
+% end
+% 
+% %--depth of order book = 12 --%
+% 
+% if length(asks) == 0
+%     depthA = 12;
+%    
+% elseif length(asks) < 12 && length(asks) > 0
+% depthA = length(asks);
+% 
+% else
+% depthA = 12;
+% end
+% 
+
+
+
 %--clear existing figure--%
 clf
 
@@ -31,7 +54,8 @@ text(.6,.95,'Quantity')
 
 %--bids--%
 
- for i = 1:max(depth)
+%-- for i = 1:max(depthB)
+for i = 1:min(depth, length(bids))
      %--quantity to integer--%
     quantity = sprintf('%d', round(bids(i,2)))
 text(.2,(.9 - i/10), quantity)
@@ -47,7 +71,8 @@ text(.2,(.9 - i/10), quantity)
   
 
 %--asks--%
- for i = 1:max(depth)
+%-- for i = 1:max(depthA)
+     for i = 1:min(depth, length(asks))
      %--quantity to integer--%
     quantity = sprintf('%d', round(asks(i,2)))
 text(.6,(.9 - i/10), quantity)
