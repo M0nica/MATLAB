@@ -1,21 +1,20 @@
 clear 
 
-filename = 'orderbook320.csv';
+%--filename = 'orderbook320.csv';
 
 
 %--M stores the order book--%
-orderbook = csvread(filename);
+%--orderbook = csvread(filename);
 
 %--colon tells the program to read all rows--%
 %but only the first two columns--%
-bids = orderbook(:,1:2)
-asks = orderbook(:,3:4)
+%--bids = orderbook(:,1:2)
+%--asks = orderbook(:,3:4)
+asks = zeros(0,2);
+bids = zeros(0,2);
 
-%--asks = zeros(0,2);
-
-
-printBook(bids,asks)
-pause(3)
+%--printBook(bids,asks)
+%--pause(3)
 
 
 %--changes the format show that exponents are not shown--%
@@ -31,11 +30,16 @@ format shortg
 %--play around w/ different #s here --%
 newOrderPrice = 33.54
 newQuantity = 3600
-%--new type can equal ask--%
-newType = 'ask'
 
+typeGenerator =round(rand)
+ if typeGenerator == 0
+        newType = 'ask'
+    else
 
-[ trades, nBids, nAsks ] = execute (bids, asks, newOrderPrice, newQuantity, newType);
+        newType = 'bid'
+ end
+    
+[trades, nBids, nAsks ] = execute (bids, asks, newOrderPrice, newQuantity, newType);
 
 
 clf %--in order have a clean slate for new order book, clears current figure window
@@ -48,27 +52,36 @@ rng('default')
 totalOrders = 5;
 newOrderPrice = round(33+rand*20,2)
 newQuantity = round(3000+rand*10)
-typeGenerator =rand
+typeGenerator =round(rand)
+
+%--typeGenerator =rand
+ 
 %--bids=zeros(0,2);
 %--asks=zeros(0,2):
 writerObj = VideoWriter('orderbook');
 writerObj.FrameRate = 2;
 open(writerObj);
 
+
+
 for i=1:totalOrders
-    if typeGenerator >=.5
+%--typeGenerator =round(rand)
+
+    if typeGenerator == 0
         newType = 'ask'
-    end
+    else
 
-    if typeGenerator <.5
         newType = 'bid'
-    end
+    end   
     
-    [ trades, nBids, nAsks ] = execute (bids, asks, newOrderPrice, newQuantity, newType);
-
+    [ nTrades, nBids, nAsks ] = execute (bids, asks, newOrderPrice, newQuantity, newType);
+            bids = nBids;
+            asks = nAsks;
+            trades = [trades; nTrades];
+            
    
    %-- trades = [trades; newTrades]
-   trades = [trades; trades]
+  %-- trades = [trades; trades]
     printBook(bids, asks)
     pause(.01);
     F = getframe;
@@ -76,12 +89,20 @@ for i=1:totalOrders
 
 end
 
+close(writerObj)
 
-
+%--create vector of prices--%
 prices= zeros(0,1);
 for i=1:size(trades,1)
     prices=[prices; repmat(trades(i,1), trades(i,2),1)];
 end
+
+M = mean(prices);
+S = std(prices);
+%--volumes??
+H = histogram (prices)
+%--bar(prices)
+
 % %--intial value of unmet shares--&
 % unmet = newQuantity
 % 

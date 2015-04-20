@@ -1,13 +1,13 @@
-function [ trades, nBids, nAsks ] = execute( bids, asks, newOrderPrice, newQuantity, newType )
-%UNTITLED3 Summary of this function goes here
-%   Detailed explanation goes here
-trades = zeros(0,2);
+function [ nTrades, nBids, nAsks ] = execute( bids, asks, newOrderPrice, newQuantity, newType )
+
 %--intial value of unmet shares--&
 unmet = newQuantity
+%--addsd bids and trades to the order book
+nTrades = zeros(0,2);
+
 
 %--look at the first column of asks, to find all compatible orders --%
 compatibleAsks = find(asks(:, 1) <= newOrderPrice);
-
 
 %--look at the first column of bids, to find all compatible orders --%
 compatibleBids = find(bids(:, 1) >= newOrderPrice);
@@ -22,7 +22,7 @@ if newType == 'bid'
             if volume > 0
                 
                 %-- quantity of shares traded--
-                trades = [trades; [asks(i,1) volume]]
+                nTrades = [nTrades; [asks(i,1) volume]]
                 unmet = unmet - volume
                 
                 %--updates the 2nd column (quantity) of compatible asks to,
@@ -43,9 +43,7 @@ if newType == 'bid'
             
             bids = sortrows(bids, -1)
             
-%             Now after your order has executed, you may end up with some 
-% rows in asks with zero quantity. How do you get rid of these? 
-% You can use the following command:
+%get rid of excess zeroes--%
 
           asks = asks(asks(:,2) > 0,:)
 
@@ -64,9 +62,7 @@ if newType == 'bid'
             end
         end
         
-       
-       %-- disp(asks)--%
-       %-- disp(bids)--%
+      
         
        
     end
@@ -91,7 +87,8 @@ else
             if volume > 0
                 
                 %-- quantity of shares traded--
-                trades = [trades; [bids(i,1) volume]]
+                  nTrades = [nTrades; [bids(i,1) volume]]
+              %--  trades = [trades; [bids(i,1) volume]]
                 unmet = unmet - volume
                 
                 %--updates the 2nd column (quantity) of compatible bids to,
@@ -135,7 +132,7 @@ else
         end
         
         
-        %--  bids = orderbook(:,1:2);
+       
         
         
         
@@ -144,7 +141,7 @@ end
     %--this removes any rows with zeros--%
           bids = bids(bids(:,2) > 0,:);
          asks = asks(asks(:,2) > 0,:);
-        %-- asks = orderbook(:,3:4);
+       
         disp('updated asks:')
         disp(asks)
         
@@ -153,11 +150,7 @@ end
     
         nBids = bids
         nAsks = asks
-      
-             
-   %--     newOrderbook(:,1:2) = bids;
-   %--     newOrderbook(:,3:4) = asks;
-
+     
 
 
 
